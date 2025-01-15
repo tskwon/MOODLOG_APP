@@ -47,9 +47,6 @@ git add . # 모든 수정 파일 추가 ('.'은 모든 파일을 의미)
 # 변경 사항을 커밋
 git commit -m "작업 내용 설명" # 변경 내용에 대한 커밋 메시지 작성
 
-# Git Credential Manager 활성화
-git config --global credential.helper store # 최초 한번만 username, password 작성
-
 # 새 브랜치를 원격 저장소에 Push
 git push origin ANG # 로컬 브랜치를 원격 저장소로 Push
 ```
