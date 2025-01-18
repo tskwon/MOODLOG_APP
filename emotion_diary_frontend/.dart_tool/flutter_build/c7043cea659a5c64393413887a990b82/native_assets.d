@@ -1,1 +1,0 @@
- D:\\emotion_app\\emotion_diary_frontend\\.dart_tool\\flutter_build\\c7043cea659a5c64393413887a990b82\\native_assets.yaml: 
