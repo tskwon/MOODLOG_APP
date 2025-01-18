@@ -1,0 +1,71 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run --machine --start-paused -d edge --devtools-server-address http://127.0.0.1:9100/ --target D:\emotion_app\emotion_diary_frontend\lib\main.dart
+
+## exception
+
+StateError: Bad state: StreamSink is closed
+
+```
+#0      _StreamSinkImpl.add (dart:_http/http_impl.dart:919:7)
+#1      _WebSocketImpl.add (dart:_http/websocket_impl.dart:1223:11)
+#2      vmServiceConnectUriWithFactory.<anonymous closure> (package:vm_service/vm_service_io.dart:37:46)
+#3      VmService._processRequest (package:vm_service/src/vm_service.dart:2030:18)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 3.27.1, on Microsoft Windows [Version 10.0.26100.2894], locale ko-KR)
+    • Flutter version 3.27.1 on channel stable at D:\download\flutter_windows_3.27.1-stable\flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 17025dd882 (4 weeks ago), 2024-12-17 03:23:09 +0900
+    • Engine revision cb4b5fff73
+    • Dart version 3.6.0
+    • DevTools version 2.40.2
+
+[✓] Windows Version (Installed version of Windows is version 10 or higher)
+
+[!] Android toolchain - develop for Android devices (Android SDK version 34.0.0)
+    • Android SDK at C:\Users\james\AppData\Local\Android\Sdk
+    ✗ cmdline-tools component is missing
+      Run `path/to/sdkmanager --install "cmdline-tools;latest"`
+      See https://developer.android.com/studio/command-line for more details.
+    ✗ Android license status unknown.
+      Run `flutter doctor --android-licenses` to accept the SDK licenses.
+      See https://flutter.dev/to/windows-android-setup for more details.
+
+[✓] Chrome - develop for the web
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[✓] Visual Studio - develop Windows apps (Visual Studio Community 2022 17.12.0)
+    • Visual Studio at C:\Program Files\Microsoft Visual Studio\2022\Community
+    • Visual Studio Community 2022 version 17.12.35506.116
+    • Windows 10 SDK version 10.0.22621.0
+
+[✓] Android Studio (version 2024.2)
+    • Android Studio at C:\Program Files\Android\Android Studio
+    • Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    • Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    • Java version OpenJDK Runtime Environment (build 21.0.3+-12282718-b509.11)
+
+[✓] VS Code (version 1.96.3)
+    • VS Code at C:\Users\james\AppData\Local\Programs\Microsoft VS Code
+    • Flutter extension version 3.102.0
+
+[✓] Connected device (3 available)
+    • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.26100.2894]
+    • Chrome (web)      • chrome  • web-javascript • Google Chrome 131.0.6778.265
+    • Edge (web)        • edge    • web-javascript • Microsoft Edge 131.0.2903.146
+
+[✓] Network resources
+    • All expected network resources are available.
+
+! Doctor found issues in 1 category.
+```

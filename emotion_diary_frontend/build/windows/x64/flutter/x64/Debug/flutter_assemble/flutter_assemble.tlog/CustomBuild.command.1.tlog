@@ -1,0 +1,28 @@
+^D:\EMOTION_APP\EMOTION_DIARY_FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\93CA9C272D0C498E347E3DD7B0365587\FLUTTER_WINDOWS.DLL.RULE
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=D:\download\flutter_windows_3.27.1-stable\flutter PROJECT_DIR=D:\emotion_app\emotion_diary_frontend FLUTTER_ROOT=D:\download\flutter_windows_3.27.1-stable\flutter FLUTTER_EPHEMERAL_DIR=D:\emotion_app\emotion_diary_frontend\windows\flutter\ephemeral PROJECT_DIR=D:\emotion_app\emotion_diary_frontend FLUTTER_TARGET=D:\emotion_app\emotion_diary_frontend\lib\main.dart DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=D:\emotion_app\emotion_diary_frontend\.dart_tool\package_config.json D:/download/flutter_windows_3.27.1-stable/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\EMOTION_APP\EMOTION_DIARY_FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\DB4D00B64B1E388AF58AAC83335F9F1F\FLUTTER_ASSEMBLE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\EMOTION_APP\EMOTION_DIARY_FRONTEND\WINDOWS\FLUTTER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/emotion_app/emotion_diary_frontend/windows -BD:/emotion_app/emotion_diary_frontend/build/windows/x64 --check-stamp-file D:/emotion_app/emotion_diary_frontend/build/windows/x64/flutter/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

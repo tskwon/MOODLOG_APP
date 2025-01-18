@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\emotion_app\emotion_diary_frontend\build\windows\x64\CMakeFiles\db4d00b64b1e388af58aac83335f9f1f\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{489D7A9E-65CF-307F-A0AE-6C10A4F97C2C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
