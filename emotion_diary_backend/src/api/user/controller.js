@@ -2,7 +2,9 @@
 /*250119 KSH */
 const repository = require('./repository');
 const crypto = require('crypto');
-const jwt = require('./jwt');
+const jwt = require('jsonwebtoken');
+//const jwt = require('./jwt');
+//const generateToken = require('./jwt');
 
 /*repo에서도 작성 되었듯이 회원가입시 이름 이메일 비번으로 하실거면 ㅇㅇ */
 /*
@@ -55,8 +57,8 @@ exports.register = async(req,res) =>{
     const newUser = await repository.register(name, email, hashedPassword);
 
     if (newUser) {
-      // JWT 생성
-      const token = jwt.sign({ id: newUser._id, name: newUser.name });
+      // JWT 생성 원본: jwt.sign
+      const token = jwt.sign({ id: newUser._id, name: newUser.name }, process.env.JWT_KEY);
       return res.status(201).json({ result: 'ok', access_token: token });
     } else {
       return res.status(500).json({ result: 'fail', message: '사용자 등록 중 오류가 발생했습니다.' });
@@ -86,7 +88,7 @@ exports.login = async (req, res) => {
     }
 
     // JWT 생성
-    const token = jwt.sign({ id: user._id, name: user.name });
+    const token = jwt.sign({ id: user._id, name: user.name },process.env.JWT_KEY);
     return res.status(200).json({ result: 'ok', access_token: token });
   } catch (error) {
     console.error(error);

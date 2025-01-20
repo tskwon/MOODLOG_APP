@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthProvider {
-  final String baseUrl = 'https://your-api-base-url.com'; // API 베이스 URL
-
+  //final String baseUrl = 'https://your-api-base-url.com'; // API 베이스 URL
+  final String baseUrl = 'http://localhost:3720';
   // 로그인 메서드
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {

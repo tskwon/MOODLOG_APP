@@ -2,17 +2,17 @@ class UserModel {
   final String email;
   final String password;
   final String name;
-  final String phone;
-  final String gender;
-  final String age;
+  //final String phone;
+  //final String gender;
+  //final String age;
 
   UserModel({
     required this.email,
     required this.password,
     required this.name,
-    required this.phone,
-    required this.gender,
-    required this.age,
+    //required this.phone,
+    //required this.gender,
+    //required this.age,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,9 +20,6 @@ class UserModel {
       'email': email,
       'password': password,
       'name': name,
-      'phone': phone,
-      'gender': gender,
-      'age': age,
     };
   }
 }

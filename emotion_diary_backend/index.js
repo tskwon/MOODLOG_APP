@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3720;
 const router = require('./src/router');
 const bodyParser = require('body-parser');
 
@@ -12,6 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 라우터를 애플리케이션에 등록
 app.use('/', router);
+//cors 문제 해결을 위한 추가적 모듈
+app.use(cors());
+
 // 서버 시작
 app.listen(port, () => {
   console.log(`웹서버 구동중 ${port}`);
