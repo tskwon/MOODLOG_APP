@@ -28,7 +28,6 @@ class MoodLogApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/auth', // 첫 번째 화면 설정
-
       getPages: [
         GetPage(
           name: '/auth',

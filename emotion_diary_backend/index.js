@@ -5,6 +5,13 @@ const app = express();
 const port = process.env.PORT || 3720;
 const router = require('./src/router');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+
+const uploadPath = path.join(__dirname, 'uploads');
+if(!fs.existsSync(uploadPath)){fs.mkdirSync(uploadPath);}
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // JSON 형식의 데이터 처리
 app.use(bodyParser.json());

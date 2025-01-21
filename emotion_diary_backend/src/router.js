@@ -2,7 +2,7 @@ const express = require(`express`);
 const router = express.Router();
 
 const multer = require(`multer`);
-const upload = multer({dest: 'storage/'});
+const upload = require('../src/config/multer');
 //const authenticateToken = require('./middleware/authenticate');
 
 
@@ -21,12 +21,14 @@ const { logRequestTime } = require('./middleware/log')//이거 응답 레이턴�
 router.use(logRequestTime);
 
 router.get('/',webController.home);
-router.post('/auth/register', apiUserController.register);
+//router.post('/auth/register', apiUserController.register);
+router.post('/auth/register',upload.single('profileImage'), apiUserController.register);
 router.post('/auth/login', apiUserController.login);
 
 //router.use(authenticateToken);
 
 router.get('/api/user/my', apiUserController.show);
-router.post('/api/user/my', apiUserController.update);
+//router.post('/api/user/my', apiUserController.update);
+router.post('/api/user/my',upload.single('profileImage'),apiUserController.update);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:emotion_diary_app/shared/global.dart';
+
 /*모르겠습니다*/
 /// API 요청을 처리하는 기본 Provider 클래스
 class Provider extends GetConnect {

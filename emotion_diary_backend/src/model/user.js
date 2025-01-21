@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },  // 이메일
   //gender: { type: String, enum: ['남', '여'], required: true }, // 성별
   password: { type: String, required: true },             // 비밀번호 (암호화된 상태)
-  profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'File', default: null }, // 프로필 이미지
+  //profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'File', default: null }, // 프로필 이미지
+  profileId: {type:String,default:null},
   createdAt: { type: Date, default: Date.now },           // 생성 날짜
 });
 

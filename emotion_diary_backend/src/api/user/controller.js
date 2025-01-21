@@ -3,6 +3,7 @@
 const repository = require('./repository');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const upload = require('../../config/multer');
 //const jwt = require('./jwt');
 //const generateToken = require('./jwt');
 
@@ -41,6 +42,8 @@ exports.register = async (req, res) => {
   }
 };*/
 
+
+/*
 exports.register = async(req,res) =>{
   try{
     const {name, email, password} = req.body;
@@ -72,6 +75,38 @@ exports.register = async(req,res) =>{
     return res.status(500).json({ result: 'fail', message: '서버 오류가 발생했습니다.' });
   }
 }
+*/
+// 사용자 등록
+exports.register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // 중복된 이메일 확인
+    const userExists = await repository.findByEmail(email);
+    if (userExists) {
+      return res.status(400).json({ result: 'fail', message: '중복된 이메일이 존재합니다.' });
+    }
+
+    // 비밀번호 암호화
+    const hashedPassword = crypto.pbkdf2Sync(password, process.env.SALT_KEY, 50, 100, 'sha512').toString('base64');
+
+    // 프로필 이미지 파일 경로 설정
+    const profileImagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+    // 사용자 등록
+    const newUser = await repository.register(name, email, hashedPassword, profileImagePath);
+
+    if (newUser) {
+      const token = jwt.sign({ id: newUser._id, name: newUser.name }, process.env.JWT_KEY);
+      return res.status(201).json({ result: 'ok', access_token: token });
+    } else {
+      return res.status(500).json({ result: 'fail', message: '사용자 등록 중 오류가 발생했습니다.' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ result: 'fail', message: '서버 오류가 발생했습니다.' });
+  }
+};
 
 exports.login = async (req, res) => {
   try {
@@ -113,7 +148,28 @@ exports.show = async (req, res) => {
     return res.status(500).json({ result: 'fail', message: '서버 오류가 발생했습니다.' });
   }
 };
+exports.update = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const userId = req.user.id;
 
+    // 프로필 이미지 파일 경로
+    const profileImagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    // 사용자 정보 업데이트
+    const updatedUser = await repository.update(userId, name, profileImagePath);
+
+    if (!updatedUser) {
+      return res.status(400).json({ result: 'fail', message: '사용자 정보를 업데이트할 수 없습니다.' });
+    }
+
+    return res.status(200).json({ result: 'ok', data: updatedUser });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ result: 'fail', message: '서버 오류가 발생했습니다.' });
+  }
+};
+/*
 exports.update = async (req, res) => {
   try {
     const { name, profile_id } = req.body;
@@ -133,4 +189,4 @@ exports.update = async (req, res) => {
     console.error(error);
     return res.status(500).json({ result: 'fail', message: '서버 오류가 발생했습니다.' });
   }
-};
+};*/

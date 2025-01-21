@@ -35,18 +35,17 @@ exports.update = async (id, name, image) => {
 const User = require('../../model/user');
 const { query } = require('../../database/query');
 
-/* register 저희 이메일하고 비밀번호만 사용하실거면 ㅇㅇ */
-
 /*
 exports.register = async (name, age, phone, email, gender, password) => {
   const newUser = new User({name, age, phone, email, gender, password});
   return await query(newUser, 'save'); // MongoDB의 save() 호출
-};*/
-
-exports.register = async(name,email,password) =>{
-  const newUser = new User({name,email,password});
+};
+*/
+exports.register = async (name, email, password, profileImage) => {
+  const newUser = new User({ name, email, password, profileId: profileImage });
   return await query(newUser, 'save');
-}
+};
+
 
 exports.login = async (email, password) => {
   return await query(User, 'findOne', { email, password}); // findOne() 호출
@@ -59,9 +58,17 @@ exports.findByEmail = async (email) => {
 exports.findId = async (id) => {
   return await query(User, 'findById', id, 'id name email createdAt'); // ID로 사용자 찾기
 };
-
+/*
 exports.update = async (id, name, image) => {
   const updateData = { name };
   if (image !== undefined) updateData.profileId = image;
   return await query(User, 'findByIdAndUpdate', id, updateData, { new: true }); // 업데이트 후 결과 반환
 };
+*/
+exports.update = async (id, name, profileImage) => {
+  const updateData = { name };
+  if (profileImage !== undefined) updateData.profileId = profileImage;
+
+  return await query(User, 'findByIdAndUpdate', id, updateData, { new: true });
+};
+
