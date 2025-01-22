@@ -1,3 +1,4 @@
+import 'package:emotion_diary_app/controller/emotion_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/auth_controller.dart';
@@ -15,17 +16,18 @@ class _AuthIndexState extends State<AuthIndex> {
   final authController = Get.put(AuthController());
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final EmotionController emotionController = Get.find<EmotionController>();
 
   _submit() async {
     bool result = await authController.login(
       _emailController.text,
       _passwordController.text,
     );
+    print(result);
+
     if (result) {
-      Get.offAllNamed('/home');
-    } else {
-      Get.snackbar('Error', '로그인에 실패했습니다. 다시 시도해주세요.');
-    }
+      Get.offAllNamed('/diary');
+    } 
   }
 
   @override

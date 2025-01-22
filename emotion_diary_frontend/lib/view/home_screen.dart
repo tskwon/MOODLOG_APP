@@ -1,6 +1,7 @@
+import 'package:emotion_diary_app/controller/calendar_controller.dart';
+import 'package:emotion_diary_app/controller/emotion_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/emotion_controller.dart';
 import 'calendar_screen.dart';
 import 'emotion_selector.dart';
 
@@ -9,28 +10,40 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EmotionController controller = Get.put(EmotionController());
+    final EmotionController controller = Get.find<EmotionController>();
+    final CalendarController calendarController =
+        Get.find<CalendarController>();
+
+    final TextEditingController textController =
+        TextEditingController(text: controller.text.value);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF8CA8AC), // 톤 다운된 청록색
+        backgroundColor: const Color(0xFF8CA8AC),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset('images/logo.jpg', fit: BoxFit.contain),
+          child: GestureDetector(
+            onTap: () {
+              Get.toNamed('/splash'); // GetX 라우트로 이동
+            },
+            child: Image.asset('images/logo.jpg', fit: BoxFit.contain),
+          ),
         ),
         title: const Text(
           'MOODLOG',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
-            color: Color(0xFFF8CF1A), // 밝은 노란색
+            color: Color(0xFFF8CF1A),
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today, color: Colors.white),
-            onPressed: () {
+            onPressed: () async {
+              await calendarController.getMonthDiary(
+                  controller.date.value.year, controller.date.value.month);
               Get.to(
                 () => CalendarScreen(),
                 transition: Transition.fadeIn,
@@ -47,11 +60,13 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Obx(() => Text(
-                      '${controller.currentDate.value.year}.${controller.currentDate.value.month}.${controller.currentDate.value.day}',
-                      style: const TextStyle(
-                          fontSize: 18, color: Color(0xFF4F4F4F)),
-                    )),
+                Text(
+                  '${controller.date.value.year}.${controller.date.value.month}.${controller.date.value.day}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFF4F4F4F),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -66,15 +81,17 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.grey.shade100,
                   ),
-                  child: Obx(() => controller.selectedEmotion.value.isEmpty
+                  child: Obx(() => controller.emotion.value.isEmpty
                       ? const Center(
-                          child: Text('이미지 없음',
-                              style: TextStyle(color: Colors.grey)),
+                          child: Text(
+                            '이미지 없음',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         )
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.asset(
-                            controller.selectedEmotion.value,
+                            controller.emotion.value,
                             fit: BoxFit.cover,
                           ),
                         )),
@@ -85,14 +102,15 @@ class HomeScreen extends StatelessWidget {
             const Text(
               '일기 작성',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333)),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF333333),
+              ),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: TextField(
-                onChanged: (text) => controller.diaryText.value = text,
+                controller: textController,
                 maxLines: null,
                 expands: true,
                 style: const TextStyle(fontSize: 16, color: Color(0xFF333333)),
@@ -110,22 +128,50 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          controller.saveDiary(controller.diaryText.value);
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              Future.delayed(const Duration(seconds: 2), () {
-                Navigator.of(context).pop();
-              });
-              return const AlertDialog(
-                title: Text('등록 완료'),
-                content: Text('일기가 성공적으로 등록되었습니다!'),
-              );
-            },
-          );
+        onPressed: () async {
+          controller.text.value = textController.text;
+
+          // 일기 저장 호출
+          if (controller.modify.value) {
+            await controller.putDiary();
+          } else {
+            await controller.saveDiary();
+          }
+          if (!context.mounted) return;
+
+          // 성공 여부 처리
+          if (controller.isSaved.value) {
+            calendarController.getMonthDiary(
+                controller.date.value.year, controller.date.value.month);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                Future.delayed(const Duration(seconds: 2), () {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                });
+                return controller.modify.value == true
+                    ? const AlertDialog(
+                        title: Text('수정 완료'),
+                        content: Text('일기가 성공적으로 수정되었습니다!'),
+                      )
+                    : const AlertDialog(
+                        title: Text('등록 완료'),
+                        content: Text('일기가 성공적으로 등록되었습니다!'),
+                      );
+              },
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("일기 저장에 실패했습니다."),
+              ),
+            );
+          }
         },
-        label: const Text('등록'),
+        label: controller.modify.value == true
+            ? const Text('수정')
+            : const Text('등록'),
         icon: const Icon(Icons.save),
         backgroundColor: const Color(0xFF8CA8AC),
       ),

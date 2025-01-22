@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:get/get.dart';
 import '../controller/auth_controller.dart';
 import '../widgets/btn/label_textfield.dart';
@@ -16,6 +19,54 @@ class _RegisterFormState extends State<RegisterForm> {
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
   final _nameController = TextEditingController();
+
+  File? _profileImage;
+
+  Future<File> _resizeImage(File file,
+      {required int maxWidth, required int maxHeight}) async {
+    final rawImage = await file.readAsBytes();
+    final decodedImage = img.decodeImage(rawImage);
+
+    if (decodedImage == null) {
+      throw Exception('이미지를 디코딩할 수 없습니다.');
+    }
+
+    // 이미지 비율 유지하면서 크롭
+    final resizedImage = img.copyResizeCropSquare(
+      decodedImage,
+      size: maxWidth > maxHeight ? maxHeight : maxWidth, // 최대값으로 크롭
+    );
+
+    // 조정된 이미지를 파일로 저장
+    final resizedBytes = img.encodeJpg(resizedImage);
+    final resizedFile = File(file.path)..writeAsBytesSync(resizedBytes);
+
+    return resizedFile;
+  }
+
+  Future<void> _pickAndResizeImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      File imageFile = File(pickedImage.path);
+
+      final screenWidth = MediaQuery.of(context).size.width;
+
+      // 화면 크기를 기준으로 이미지 크기 조정
+      File resizedImage = await _resizeImage(
+        imageFile,
+        maxWidth: (screenWidth * 2).toInt(), // CircleAvatar 크기보다 2배로 설정
+        maxHeight: (screenWidth * 2).toInt(),
+        //screenWidth: MediaQuery.of(context).size.width, // 화면의 너비 전달
+      );
+      if (!mounted) return;
+
+      setState(() {
+        _profileImage = resizedImage; // 리사이즈된 이미지를 설정
+      });
+    }
+  }
 
   // 회원가입 요청 처리
   Future<void> _submit() async {
@@ -44,6 +95,7 @@ class _RegisterFormState extends State<RegisterForm> {
       _emailController.text.trim(),
       _passwordController.text.trim(),
       _nameController.text.trim(),
+      _profileImage,
     );
 
     if (result) {
@@ -52,13 +104,7 @@ class _RegisterFormState extends State<RegisterForm> {
         '회원가입이 완료되었습니다!',
         snackPosition: SnackPosition.BOTTOM,
       );
-      Get.offAllNamed('/home'); // 회원가입 완료 후 홈 화면으로 이동
-    } else {
-      Get.snackbar(
-        'Error',
-        '회원가입에 실패했습니다. 다시 시도해주세요.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.offAllNamed('/login'); // 회원가입 완료 후 홈 화면으로 이동
     }
   }
 
@@ -93,14 +139,25 @@ class _RegisterFormState extends State<RegisterForm> {
         child: ListView(
           children: [
             const SizedBox(height: 20),
-            CircleAvatar(
-              radius: screenWidth * 0.1,
-              backgroundColor: Colors.grey.shade300,
-              child: Icon(
-                Icons.camera_alt,
-                color: Colors.grey.shade700,
-                size: screenWidth * 0.08,
-              ),
+            GestureDetector(
+              onTap: _pickAndResizeImage, //_pickImage,
+              child: CircleAvatar(
+                  radius: screenWidth * 0.1,
+                  backgroundColor: Colors.grey.shade300,
+                  child: _profileImage != null
+                      ? ClipOval(
+                          child: Image.file(
+                            _profileImage!,
+                            fit: BoxFit.cover,
+                            width: screenWidth * 0.2,
+                            height: screenWidth * 0.2,
+                          ),
+                        ) //? FileImage(_profileImage!,) // 선택된 이미지 표시
+                      : Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey.shade700,
+                          size: screenWidth * 0.08,
+                        )),
             ),
             const SizedBox(height: 20),
             LabelTextField(

@@ -1,15 +1,10 @@
+import 'package:emotion_diary_app/shared/global.dart';
 import 'package:flutter/material.dart';
 import '../controller/emotion_controller.dart';
 
 void showEmotionSelector(BuildContext context, EmotionController controller) {
-  final List<Map<String, String>> emotions = [
-    {'label': '기쁨', 'path': 'images/joy.jpg'},
-    {'label': '화남', 'path': 'images/mad.jpg'},
-    {'label': '슬픔', 'path': 'images/sad.jpg'},
-    {'label': '불행', 'path': 'images/unhappy.jpg'},
-    {'label': '불안', 'path': 'images/unrest.jpg'},
-  ];
-
+  final List<Map<String, String>> emotions = Global.emotions;
+  
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -20,7 +15,7 @@ void showEmotionSelector(BuildContext context, EmotionController controller) {
           children: emotions.map((emotion) {
             return GestureDetector(
               onTap: () {
-                controller.selectEmotion(emotion['path']!);
+                controller.emotion.value = emotion['path']!;
                 Navigator.of(context).pop();
               },
               child: Row(
